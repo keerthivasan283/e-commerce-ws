@@ -1,0 +1,119 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import siteConfig from '../config/site';
+import { getAllProducts } from '../lib/db';
+import type { Product } from '../types/product';
+import { formatINR } from '../utils/formatters';
+import { getOrderWhatsAppUrl } from '../utils/whatsapp';
+
+const products = getAllProducts();
+const availableCount = products.filter(p => p.status === 'available').length;
+const soldCount = products.filter(p => p.status === 'sold').length;
+const categories = [...new Set(products.map(p => p.category))];
+---
+
+<BaseLayout
+  title="Home"
+  description="Thrift Tamilan - Curated 1-of-1 vintage and streetwear drops in Tamil Nadu, India. Hand-selected jackets, tees, denim and hoodies ordered directly via WhatsApp."
+>
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-16">
+    <!-- Announcement Badge -->
+    <div class="inline-flex items-center gap-2 px-3 py-1 bg-brand-dark text-brand-surface text-xs font-mono tracking-wider uppercase mb-6">
+      <span class="w-2 h-2 rounded-full bg-brand-accent animate-pulse"></span>
+      {siteConfig.announcementText}
+    </div>
+
+    <!-- Header info banner -->
+    <div class="border-b border-brand-border pb-8 mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+      <div>
+        <span class="text-xs font-mono uppercase tracking-widest text-brand-accent">Phase 2 Verification</span>
+        <h1 class="font-display text-5xl md:text-8xl uppercase tracking-tight leading-none mt-1">
+          {siteConfig.brandName}
+        </h1>
+        <p class="text-brand-charcoal text-base md:text-lg mt-3 max-w-2xl">
+          {siteConfig.tagline}. Central configuration connected with {products.length} catalog items across {categories.length} categories.
+        </p>
+      </div>
+      <div class="flex gap-4">
+        <div class="border border-brand-border p-4 bg-white/60 min-w-[120px]">
+          <span class="text-xs font-mono text-brand-charcoal/70 uppercase">Available</span>
+          <p class="font-display text-3xl text-brand-dark">{availableCount}</p>
+        </div>
+        <div class="border border-brand-border p-4 bg-white/60 min-w-[120px]">
+          <span class="text-xs font-mono text-brand-charcoal/70 uppercase">Sold Out</span>
+          <p class="font-display text-3xl text-brand-sold">{soldCount}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sample Data Model & WhatsApp Links Preview -->
+    <div class="space-y-6">
+      <div class="flex items-center justify-between">
+        <h2 class="font-display text-3xl uppercase tracking-wide">Central Data & WhatsApp Link Test</h2>
+        <span class="text-xs font-mono text-brand-accent">WhatsApp: +{siteConfig.whatsappNumber}</span>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {products.slice(0, 3).map((item) => {
+          const isSold = item.status === 'sold';
+          const orderUrl = getOrderWhatsAppUrl(item);
+          return (
+            <div class="border border-brand-border bg-white/70 p-5 flex flex-col justify-between">
+              <div>
+                <div class="flex justify-between items-start mb-3">
+                  <span class="text-xs font-mono bg-brand-dark text-white px-2 py-0.5">{item.code}</span>
+                  <span class={`text-xs uppercase font-mono px-2 py-0.5 border ${
+                    isSold ? 'border-brand-sold text-brand-sold bg-stone-100' : 'border-emerald-700 text-emerald-700 bg-emerald-50'
+                  }`}>
+                    {item.status}
+                  </span>
+                </div>
+                <div class="aspect-[4/5] bg-stone-900 mb-4 overflow-hidden">
+                  <img
+                    src={item.images[0]}
+                    alt={item.name}
+                    class="w-full h-full object-cover"
+                    loading="lazy"
+                  />
+                </div>
+                <div class="flex items-center gap-2 mb-1">
+                  <span class="text-xs font-mono text-brand-charcoal/70">{item.category}</span>
+                  <span class="text-xs font-mono text-brand-charcoal/70">• Size {item.size}</span>
+                  <span class="text-xs font-mono text-brand-charcoal/70">• {item.condition}</span>
+                </div>
+                <h3 class="font-display text-xl uppercase tracking-tight line-clamp-1">{item.name}</h3>
+                <div class="mt-2 flex items-baseline gap-2">
+                  <span class="font-display text-2xl text-brand-dark">
+                    {formatINR(item.offerPrice ?? item.price)}
+                  </span>
+                  {item.offerPrice && (
+                    <span class="text-sm line-through text-brand-sold">
+                      {formatINR(item.price)}
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              <div class="mt-4 pt-4 border-t border-brand-border">
+                {isSold ? (
+                  <button disabled class="w-full py-2.5 text-xs font-mono uppercase bg-stone-200 text-stone-500 cursor-not-allowed">
+                    Sold Out
+                  </button>
+                ) : (
+                  <a
+                    href={orderUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="w-full inline-flex items-center justify-center gap-2 py-2.5 text-xs font-mono uppercase bg-brand-accent hover:bg-brand-accent-hover text-white transition-colors"
+                  >
+                    Test WhatsApp Link
+                  </a>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  </div>
+</BaseLayout>

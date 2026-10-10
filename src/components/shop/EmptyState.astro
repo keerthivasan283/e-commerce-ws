@@ -1,0 +1,35 @@
+---
+export interface Props {
+  id?: string;
+  class?: string;
+}
+
+const { id = 'empty-state', class: className = '' } = Astro.props;
+---
+
+<div
+  id={id}
+  class={`hidden py-16 px-4 text-center border-2 border-dashed border-brand-border bg-white/40 my-8 ${className}`}
+>
+  <div class="max-w-md mx-auto space-y-4">
+    <div class="w-16 h-16 mx-auto bg-brand-muted text-brand-dark flex items-center justify-center font-display text-2xl">
+      TT
+    </div>
+    <h3 class="font-display text-2xl uppercase tracking-wider text-brand-dark">
+      No Pieces Match Your Filters
+    </h3>
+    <p class="text-sm font-sans text-brand-charcoal/70 leading-relaxed">
+      Every item in our catalogue is a 1-of-1 archive find. Try resetting your size, category, or price range filters to see other vintage pieces.
+    </p>
+    <div>
+      <button
+        id="empty-state-reset"
+        type="button"
+        class="inline-flex items-center gap-2 px-5 py-2.5 bg-brand-dark hover:bg-brand-accent text-white font-mono text-xs uppercase tracking-wider transition-colors"
+      >
+        <span>Reset All Filters</span>
+        <span>↺</span>
+      </button>
+    </div>
+  </div>
+</div>

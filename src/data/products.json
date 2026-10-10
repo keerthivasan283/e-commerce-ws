@@ -1,0 +1,282 @@
+[
+  {
+    "code": "TT001",
+    "slug": "carhartt-detroit-duck-canvas-jacket",
+    "name": "90s Carhartt Detroit Duck Canvas Jacket",
+    "price": 3999,
+    "offerPrice": 3499,
+    "size": "XL",
+    "condition": "Like New",
+    "category": "Jackets",
+    "status": "available",
+    "images": [
+      "/products/tt001-front.svg",
+      "/products/tt001-back.svg",
+      "/products/tt001-detail.svg"
+    ],
+    "description": "Heavyweight vintage Carhartt Detroit work jacket in weathered duck canvas. Blanket lined with corduroy collar and branded brass zipper. Perfectly aged patina with zero structural tears.",
+    "dateAdded": "2026-09-20",
+    "bestSeller": false,
+    "featured": true,
+    "measurements": {
+      "chestOrWaist": "26.5 inches",
+      "length": "28.0 inches",
+      "shoulder": "21.5 inches"
+    }
+  },
+  {
+    "code": "TT002",
+    "slug": "vintage-nike-acg-trail-fleece-pullover",
+    "name": "Vintage Nike ACG Trail Thermal Fleece",
+    "price": 2199,
+    "size": "L",
+    "condition": "Good",
+    "category": "Hoodies",
+    "status": "available",
+    "images": [
+      "/products/tt002-front.svg",
+      "/products/tt002-back.svg"
+    ],
+    "description": "Late 90s Nike All Conditions Gear (ACG) thermal fleece pullover. Deep navy and forest green two-tone block with embroidered triangular ACG chest patch and storm kangaroo zip pocket.",
+    "dateAdded": "2026-09-22",
+    "bestSeller": true,
+    "featured": false,
+    "measurements": {
+      "chestOrWaist": "24.0 inches",
+      "length": "27.5 inches",
+      "shoulder": "20.0 inches"
+    }
+  },
+  {
+    "code": "TT003",
+    "slug": "pink-floyd-1994-division-bell-tour-tee",
+    "name": "1994 Pink Floyd Division Bell Tour Tee",
+    "price": 1799,
+    "size": "L",
+    "condition": "Good",
+    "category": "T-Shirts",
+    "status": "sold",
+    "images": [
+      "/products/tt003-front.svg",
+      "/products/tt003-back.svg"
+    ],
+    "description": "Authentic single-stitch 1994 Division Bell world tour graphic tee. Washed sun-faded vintage black cotton with classic double-face graphic and tour dates on the back.",
+    "dateAdded": "2026-09-15",
+    "bestSeller": true,
+    "featured": false,
+    "measurements": {
+      "chestOrWaist": "22.5 inches",
+      "length": "29.0 inches",
+      "shoulder": "19.5 inches"
+    }
+  },
+  {
+    "code": "TT004",
+    "slug": "levis-501-original-fit-selvedge-denim",
+    "name": "Levi's 501 Original Selvedge Raw Denim",
+    "price": 2499,
+    "offerPrice": 1999,
+    "size": "32",
+    "condition": "Like New",
+    "category": "Jeans",
+    "status": "available",
+    "images": [
+      "/products/tt004-front.svg",
+      "/products/tt004-back.svg",
+      "/products/tt004-detail.svg"
+    ],
+    "description": "Classic Levi's 501 straight leg jeans with iconic button fly and red tab. Made from heavy 14oz rigid raw denim with natural honeycombing whiskering in excellent condition.",
+    "dateAdded": "2026-09-25",
+    "bestSeller": false,
+    "featured": true,
+    "measurements": {
+      "chestOrWaist": "32.0 inches",
+      "length": "32.0 inches inseam"
+    }
+  },
+  {
+    "code": "TT005",
+    "slug": "ralph-lauren-oxford-classic-button-down",
+    "name": "Ralph Lauren Classic Oxford Shirt",
+    "price": 1499,
+    "size": "M",
+    "condition": "Like New",
+    "category": "Shirts",
+    "status": "available",
+    "images": [
+      "/products/tt005-front.svg",
+      "/products/tt005-detail.svg"
+    ],
+    "description": "Crisp sky blue 100% heavyweight cotton oxford cloth button-down with multi-color polo player embroidery. Clean collar rolls, no collar fraying, relaxed 90s custom fit.",
+    "dateAdded": "2026-09-28",
+    "bestSeller": true,
+    "featured": false,
+    "measurements": {
+      "chestOrWaist": "21.5 inches",
+      "length": "30.0 inches",
+      "shoulder": "18.5 inches"
+    }
+  },
+  {
+    "code": "TT006",
+    "slug": "dickies-874-work-trousers-charcoal",
+    "name": "Dickies 874 Original Skate Trousers",
+    "price": 1699,
+    "size": "30",
+    "condition": "Like New",
+    "category": "Trousers",
+    "status": "available",
+    "images": [
+      "/products/tt006-front.svg",
+      "/products/tt006-back.svg"
+    ],
+    "description": "Stiff twill Dickies 874 work pant in deep charcoal grey. High rise, wide belt loops, permanent front crease. Unbeatable street durability.",
+    "dateAdded": "2026-09-18",
+    "bestSeller": false,
+    "featured": false,
+    "measurements": {
+      "chestOrWaist": "30.0 inches",
+      "length": "30.0 inches inseam"
+    }
+  },
+  {
+    "code": "TT007",
+    "slug": "stussy-90s-crown-boxy-graphic-tee",
+    "name": "Stüssy 90s Crown Boxy Graphic Tee",
+    "price": 1599,
+    "offerPrice": 1299,
+    "size": "XL",
+    "condition": "Good",
+    "category": "T-Shirts",
+    "status": "available",
+    "images": [
+      "/products/tt007-front.svg",
+      "/products/tt007-back.svg"
+    ],
+    "description": "Early 2000s Stüssy heavyweight graphic tee with iconic royal crown crest print. Ribbed thick neckline, vintage boxy drop-shoulder cut, gently distressed hem.",
+    "dateAdded": "2026-10-01",
+    "bestSeller": false,
+    "featured": true,
+    "measurements": {
+      "chestOrWaist": "25.0 inches",
+      "length": "29.5 inches",
+      "shoulder": "22.0 inches"
+    }
+  },
+  {
+    "code": "TT008",
+    "slug": "starter-chicago-bulls-vintage-bomber",
+    "name": "Starter Chicago Bulls Vintage Bomber",
+    "price": 2899,
+    "size": "L",
+    "condition": "Fair",
+    "category": "Jackets",
+    "status": "sold",
+    "images": [
+      "/products/tt008-front.svg",
+      "/products/tt008-back.svg"
+    ],
+    "description": "Grail 90s satin Starter Chicago Bulls varsity snap jacket. Quilted lining with red and black striped ribbing. Authentic minor patina on inner sleeve cuff.",
+    "dateAdded": "2026-09-10",
+    "bestSeller": false,
+    "featured": false,
+    "measurements": {
+      "chestOrWaist": "24.5 inches",
+      "length": "27.0 inches",
+      "shoulder": "20.5 inches"
+    }
+  },
+  {
+    "code": "TT009",
+    "slug": "champion-reverse-weave-heavy-hoodie",
+    "name": "Champion Reverse Weave Heavyweight Hoodie",
+    "price": 1899,
+    "size": "M",
+    "condition": "Good",
+    "category": "Hoodies",
+    "status": "available",
+    "images": [
+      "/products/tt009-front.svg",
+      "/products/tt009-back.svg"
+    ],
+    "description": "Heavy 12oz cross-grain cotton fleece hoodie in heather grey with ribbed side gussets. Thick double-ply hood and small signature C logo on left wrist.",
+    "dateAdded": "2026-10-02",
+    "bestSeller": false,
+    "featured": true,
+    "measurements": {
+      "chestOrWaist": "22.0 inches",
+      "length": "27.0 inches",
+      "shoulder": "19.0 inches"
+    }
+  },
+  {
+    "code": "TT010",
+    "slug": "woolrich-shadow-plaid-heavy-flannel",
+    "name": "Woolrich Shadow Plaid Heavy Flannel",
+    "price": 1699,
+    "offerPrice": 1399,
+    "size": "XL",
+    "condition": "Like New",
+    "category": "Shirts",
+    "status": "available",
+    "images": [
+      "/products/tt010-front.svg",
+      "/products/tt010-detail.svg"
+    ],
+    "description": "Vintage thick brushed cotton lumberjack flannel shirt in terracotta, black and cream shadow plaid. Dual buttoned chest pockets and sturdy tortoise-shell buttons.",
+    "dateAdded": "2026-10-03",
+    "bestSeller": false,
+    "featured": false,
+    "measurements": {
+      "chestOrWaist": "25.5 inches",
+      "length": "31.0 inches",
+      "shoulder": "21.0 inches"
+    }
+  },
+  {
+    "code": "TT011",
+    "slug": "harley-davidson-daytona-biker-tee",
+    "name": "Harley-Davidson 2003 Daytona Biker Tee",
+    "price": 1650,
+    "size": "M",
+    "condition": "Good",
+    "category": "T-Shirts",
+    "status": "available",
+    "images": [
+      "/products/tt001-front.svg",
+      "/products/tt001-back.svg"
+    ],
+    "description": "2003 Daytona Bike Week commemorative graphic t-shirt. Front eagle emblem with flame engine graphics and back Florida dealer print on thick vintage cotton.",
+    "dateAdded": "2026-10-04",
+    "bestSeller": true,
+    "featured": false,
+    "measurements": {
+      "chestOrWaist": "21.0 inches",
+      "length": "28.0 inches",
+      "shoulder": "18.5 inches"
+    }
+  },
+  {
+    "code": "TT012",
+    "slug": "carhartt-double-knee-carpenter-pants",
+    "name": "Carhartt Double-Knee Carpenter Pants",
+    "price": 2299,
+    "offerPrice": 1899,
+    "size": "34",
+    "condition": "Fair",
+    "category": "Trousers",
+    "status": "available",
+    "images": [
+      "/products/tt004-front.svg",
+      "/products/tt004-back.svg"
+    ],
+    "description": "Authentic workwear distressed double-front knee panel pants in tobacco tan duck canvas. Utility tool pocket, hammer loop, and real trade wear marks.",
+    "dateAdded": "2026-10-05",
+    "bestSeller": false,
+    "featured": false,
+    "measurements": {
+      "chestOrWaist": "34.0 inches",
+      "length": "31.5 inches inseam"
+    }
+  }
+]

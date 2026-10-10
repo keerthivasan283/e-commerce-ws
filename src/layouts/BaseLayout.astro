@@ -1,0 +1,114 @@
+---
+import siteConfig from '../config/site';
+import '../styles/global.css';
+
+export interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  canonicalURL?: string;
+  type?: 'website' | 'article';
+  noindex?: boolean;
+  structuredData?: Record<string, any> | Record<string, any>[];
+}
+
+const {
+  title,
+  description = siteConfig.description,
+  image = '/og-image.svg',
+  canonicalURL = new URL(Astro.url.pathname, siteConfig.siteUrl).href,
+  type = 'website',
+  noindex = false,
+  structuredData,
+} = Astro.props;
+
+const fullTitle = title 
+  ? `${title} | ${siteConfig.brandName}`
+  : `${siteConfig.brandName} | ${siteConfig.tagline}`;
+
+const ogImageURL = new URL(image, siteConfig.siteUrl).href;
+
+const organizationSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ClothingStore',
+  name: siteConfig.brandName,
+  description: siteConfig.description,
+  url: siteConfig.siteUrl,
+  logo: new URL('/logo.svg', siteConfig.siteUrl).href,
+  image: ogImageURL,
+  telephone: siteConfig.whatsappNumber,
+  priceRange: '₹ - ₹₹',
+  address: {
+    '@type': 'PostalAddress',
+    addressRegion: 'Tamil Nadu',
+    addressCountry: 'IN',
+  },
+  sameAs: [
+    siteConfig.instagramUrl,
+  ],
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- Primary Meta Tags -->
+    <title>{fullTitle}</title>
+    <meta name="title" content={fullTitle} />
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
+    <meta name="theme-color" content="#0A0A0A" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content={type} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImageURL} />
+    <meta property="og:site_name" content={siteConfig.brandName} />
+    <meta property="og:locale" content="en_IN" />
+
+    <!-- Twitter Cards -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={canonicalURL} />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageURL} />
+
+    <!-- Organization JSON-LD -->
+    <script type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
+
+    <!-- Optional Page Specific JSON-LD (e.g. Product Schema) -->
+    {structuredData && (
+      <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+    )}
+  </head>
+  <body class="bg-brand-surface text-brand-dark min-h-screen flex flex-col antialiased selection:bg-brand-accent selection:text-white">
+    <!-- Accessible Skip to Content Link -->
+    <a href="#main-content" class="skip-link sr-only focus:not-sr-only">
+      Skip to main content
+    </a>
+
+    <!-- Global Layout Shell -->
+    <div class="flex-1 flex flex-col">
+      <slot name="header" />
+
+      <main id="main-content" class="flex-1 focus:outline-none">
+        <slot />
+      </main>
+
+      <slot name="footer" />
+    </div>
+
+    <slot name="floating" />
+  </body>
+</html>

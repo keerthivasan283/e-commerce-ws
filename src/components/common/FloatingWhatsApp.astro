@@ -1,0 +1,39 @@
+---
+import siteConfig from '../../config/site';
+import { getGeneralWhatsAppUrl } from '../../utils/whatsapp';
+
+export interface Props {
+  hiddenOnMobile?: boolean;
+}
+
+const { hiddenOnMobile = false } = Astro.props;
+const whatsappUrl = getGeneralWhatsAppUrl();
+---
+
+<div
+  id="floating-whatsapp-container"
+  class={`fixed bottom-6 right-6 z-30 ${hiddenOnMobile ? 'hidden md:block' : 'block'}`}
+>
+  <a
+    href={whatsappUrl}
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Direct WhatsApp Message"
+    class="flex items-center gap-2.5 bg-[#25D366] hover:bg-[#20BD5A] text-white px-4 py-3 shadow-lg hover:shadow-xl transition-all duration-300 group hover:-translate-y-0.5 active:translate-y-0"
+  >
+    <!-- Pulse indicator -->
+    <span class="relative flex h-3 w-3">
+      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+      <span class="relative inline-flex rounded-full h-3 w-3 bg-white"></span>
+    </span>
+
+    <!-- WhatsApp Icon -->
+    <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12.031 2C6.496 2 2 6.494 2 12.029c0 1.77.464 3.498 1.346 5.025L2 22l5.127-1.319a9.98 9.98 0 0 0 4.904 1.282h.004c5.533 0 10.029-4.494 10.029-10.034.001-2.678-1.04-5.197-2.932-7.091A9.957 9.957 0 0 0 12.031 2zm5.836 14.195c-.242.684-1.222 1.298-1.722 1.378-.456.072-1.042.102-3.327-.847-2.738-1.137-4.512-3.896-4.651-4.08-.135-.183-1.11-1.48-1.11-2.822 0-1.343.7-2.002.951-2.274.24-.263.53-.33.708-.33.177 0 .355.002.51.01.166.008.388-.063.606.463.226.545.772 1.884.839 2.02.068.136.113.296.023.476-.09.18-.136.293-.272.451-.136.158-.286.353-.408.473-.136.136-.279.284-.12.557.159.273.706 1.164 1.516 1.886 1.044.93 1.925 1.218 2.2 1.354.273.136.434.114.594-.068.16-.182.684-.795.865-1.068.182-.272.364-.227.614-.136.25.091 1.588.75 1.861.886.273.136.455.204.522.318.069.113.069.66-.173 1.344z"/>
+    </svg>
+
+    <span class="font-display uppercase tracking-wider text-sm font-semibold hidden sm:inline">
+      WhatsApp Us
+    </span>
+  </a>
+</div>

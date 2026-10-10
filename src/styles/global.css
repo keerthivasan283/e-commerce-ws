@@ -1,0 +1,91 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-dark: #0A0A0A;
+  --color-charcoal: #171717;
+  --color-surface: #F5F3EE;
+  --color-surface-muted: #EBE7DF;
+  --color-border: #DDD8CE;
+  --color-border-dark: #262626;
+  --color-accent: #B5532F;
+  --color-accent-hover: #984323;
+  --color-accent-light: #F6EDE8;
+  --color-sold: #8E8B85;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    background-color: var(--color-surface);
+    color: var(--color-dark);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    min-height: 100vh;
+    overflow-x: hidden;
+    background-color: var(--color-surface);
+    color: var(--color-dark);
+  }
+
+  ::selection {
+    background-color: var(--color-accent);
+    color: #FFFFFF;
+  }
+
+  /* Accessibility: skip link focus outline */
+  .skip-link:focus {
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 100;
+    padding: 0.75rem 1.25rem;
+    background: var(--color-dark);
+    color: var(--color-surface);
+    font-weight: 600;
+    outline: 2px solid var(--color-accent);
+  }
+}
+
+/* Streetwear Display Headings */
+.font-display {
+  font-family: 'Bebas Neue', Impact, sans-serif;
+  letter-spacing: 0.03em;
+}
+
+/* Micro-animations & Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-surface-muted);
+}
+::-webkit-scrollbar-thumb {
+  background: #C4BFB5;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-sold);
+}

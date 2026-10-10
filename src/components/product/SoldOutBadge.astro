@@ -1,0 +1,26 @@
+---
+export interface Props {
+  size?: 'sm' | 'md' | 'lg';
+  variant?: 'badge' | 'ribbon';
+  class?: string;
+}
+
+const { size = 'sm', variant = 'badge', class: className = '' } = Astro.props;
+
+const sizeClasses = {
+  sm: 'text-[10px] px-2 py-0.5',
+  md: 'text-xs px-2.5 py-1',
+  lg: 'text-sm px-3.5 py-1.5',
+};
+---
+
+{variant === 'ribbon' ? (
+  <div class={`bg-stone-900/90 text-stone-200 border border-stone-700 font-mono uppercase tracking-widest ${sizeClasses[size]} ${className}`}>
+    <span>● SOLD OUT</span>
+  </div>
+) : (
+  <span class={`inline-flex items-center gap-1 font-mono uppercase tracking-wider font-bold bg-stone-800 text-stone-300 border border-stone-600 ${sizeClasses[size]} ${className}`}>
+    <span class="w-1.5 h-1.5 rounded-full bg-stone-500"></span>
+    <span>SOLD OUT</span>
+  </span>
+)}

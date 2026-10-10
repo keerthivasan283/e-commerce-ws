@@ -1,0 +1,64 @@
+---
+export interface Props {
+  href: string;
+  text?: string;
+  size?: 'sm' | 'md' | 'lg';
+  variant?: 'primary' | 'secondary' | 'outline' | 'dark';
+  fullWidth?: boolean;
+  disabled?: boolean;
+  class?: string;
+  ariaLabel?: string;
+}
+
+const {
+  href,
+  text = 'Order on WhatsApp',
+  size = 'md',
+  variant = 'primary',
+  fullWidth = false,
+  disabled = false,
+  class: className = '',
+  ariaLabel,
+} = Astro.props;
+
+const sizeClasses = {
+  sm: 'px-3 py-2 text-xs gap-1.5',
+  md: 'px-5 py-3 text-sm gap-2',
+  lg: 'px-7 py-4 text-base gap-2.5',
+};
+
+const variantClasses = {
+  primary: 'bg-brand-accent hover:bg-brand-accent-hover text-white shadow-sm hover:shadow active:scale-[0.99]',
+  secondary: 'bg-[#25D366] hover:bg-[#20BD5A] text-white shadow-sm hover:shadow active:scale-[0.99]',
+  dark: 'bg-brand-dark hover:bg-neutral-800 text-brand-surface active:scale-[0.99]',
+  outline: 'border-2 border-brand-accent text-brand-accent hover:bg-brand-accent hover:text-white',
+};
+---
+
+{disabled ? (
+  <button
+    type="button"
+    disabled
+    class={`inline-flex items-center justify-center font-display uppercase tracking-wider font-semibold cursor-not-allowed opacity-60 bg-stone-300 text-stone-600 ${sizeClasses[size]} ${fullWidth ? 'w-full' : ''} ${className}`}
+    aria-disabled="true"
+  >
+    <svg class="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+    </svg>
+    <span>{text}</span>
+  </button>
+) : (
+  <a
+    href={href}
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label={ariaLabel || text}
+    class={`inline-flex items-center justify-center font-display uppercase tracking-wider font-semibold transition-all duration-200 ${sizeClasses[size]} ${variantClasses[variant]} ${fullWidth ? 'w-full' : ''} ${className}`}
+  >
+    <!-- WhatsApp Icon -->
+    <svg class="w-4 h-4 md:w-5 md:h-5 fill-current shrink-0" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12.031 2C6.496 2 2 6.494 2 12.029c0 1.77.464 3.498 1.346 5.025L2 22l5.127-1.319a9.98 9.98 0 0 0 4.904 1.282h.004c5.533 0 10.029-4.494 10.029-10.034.001-2.678-1.04-5.197-2.932-7.091A9.957 9.957 0 0 0 12.031 2zm5.836 14.195c-.242.684-1.222 1.298-1.722 1.378-.456.072-1.042.102-3.327-.847-2.738-1.137-4.512-3.896-4.651-4.08-.135-.183-1.11-1.48-1.11-2.822 0-1.343.7-2.002.951-2.274.24-.263.53-.33.708-.33.177 0 .355.002.51.01.166.008.388-.063.606.463.226.545.772 1.884.839 2.02.068.136.113.296.023.476-.09.18-.136.293-.272.451-.136.158-.286.353-.408.473-.136.136-.279.284-.12.557.159.273.706 1.164 1.516 1.886 1.044.93 1.925 1.218 2.2 1.354.273.136.434.114.594-.068.16-.182.684-.795.865-1.068.182-.272.364-.227.614-.136.25.091 1.588.75 1.861.886.273.136.455.204.522.318.069.113.069.66-.173 1.344z"/>
+    </svg>
+    <span>{text}</span>
+  </a>
+)}

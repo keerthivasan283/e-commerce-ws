@@ -1,0 +1,93 @@
+---
+import siteConfig from '../../config/site';
+import { getGeneralWhatsAppUrl } from '../../utils/whatsapp';
+
+const generalWhatsAppUrl = getGeneralWhatsAppUrl();
+---
+
+<footer class="bg-brand-dark text-brand-surface border-t border-brand-border-dark mt-auto">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-10 md:gap-8">
+      
+      <!-- Brand Column -->
+      <div class="md:col-span-2 space-y-4">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 bg-brand-surface text-brand-dark flex items-center justify-center font-display text-2xl font-bold">
+            TT
+          </div>
+          <span class="font-display text-3xl uppercase tracking-wider text-brand-surface">
+            {siteConfig.brandName}
+          </span>
+        </div>
+        <p class="text-sm text-stone-400 font-sans max-w-md leading-relaxed">
+          {siteConfig.description}
+        </p>
+        <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-neutral-900 border border-neutral-800 text-xs font-mono text-brand-accent">
+          <span>🌿 100% Sustainable Pre-Loved Fashion</span>
+        </div>
+      </div>
+
+      <!-- Quick Navigation -->
+      <div class="space-y-4">
+        <h3 class="font-display text-lg uppercase tracking-wider text-brand-surface border-b border-neutral-800 pb-2">
+          Catalogue
+        </h3>
+        <ul class="space-y-2 text-sm font-mono">
+          <li>
+            <a href="/shop" class="text-stone-400 hover:text-brand-accent transition-colors">All Drops</a>
+          </li>
+          <li>
+            <a href="/shop?category=Jackets" class="text-stone-400 hover:text-brand-accent transition-colors">Jackets & Outerwear</a>
+          </li>
+          <li>
+            <a href="/shop?category=Hoodies" class="text-stone-400 hover:text-brand-accent transition-colors">Hoodies & Fleece</a>
+          </li>
+          <li>
+            <a href="/shop?category=T-Shirts" class="text-stone-400 hover:text-brand-accent transition-colors">Graphic Tees</a>
+          </li>
+          <li>
+            <a href="/shop?category=Jeans" class="text-stone-400 hover:text-brand-accent transition-colors">Vintage Denim</a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Direct Contact & WhatsApp -->
+      <div class="space-y-4">
+        <h3 class="font-display text-lg uppercase tracking-wider text-brand-surface border-b border-neutral-800 pb-2">
+          Ordering
+        </h3>
+        <p class="text-xs text-stone-400 leading-relaxed font-sans">
+          Each piece is 1-of-1. Orders are confirmed directly on WhatsApp with fast courier dispatch across India.
+        </p>
+        <div class="space-y-2 text-xs font-mono">
+          <div>
+            <span class="text-stone-500 block">WHATSAPP:</span>
+            <a href={generalWhatsAppUrl} target="_blank" rel="noopener noreferrer" class="text-brand-accent hover:underline">
+              {siteConfig.displayPhone}
+            </a>
+          </div>
+          <div>
+            <span class="text-stone-500 block">INSTAGRAM:</span>
+            <a href={siteConfig.instagramUrl} target="_blank" rel="noopener noreferrer" class="text-stone-300 hover:text-brand-accent">
+              @thrifttamilan
+            </a>
+          </div>
+          <div>
+            <span class="text-stone-500 block">BASE:</span>
+            <span class="text-stone-300">{siteConfig.location}</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Bottom Bar -->
+    <div class="border-t border-neutral-800 mt-12 pt-6 flex flex-col sm:flex-row items-center justify-between text-xs font-mono text-stone-500 gap-4">
+      <p>&copy; {new Date().getFullYear()} {siteConfig.brandName}. All rights reserved.</p>
+      <div class="flex gap-6">
+        <a href="/about" class="hover:text-brand-surface">About Brand</a>
+        <a href="/contact" class="hover:text-brand-surface">Help &amp; FAQs</a>
+      </div>
+    </div>
+  </div>
+</footer>

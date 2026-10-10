@@ -1,0 +1,361 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/common/Header.astro';
+import Footer from '../../components/common/Footer.astro';
+import ProductGallery from '../../components/product/ProductGallery.astro';
+import ProductCard from '../../components/product/ProductCard.astro';
+import SoldOutBadge from '../../components/product/SoldOutBadge.astro';
+import FloatingWhatsApp from '../../components/common/FloatingWhatsApp.astro';
+import { getAllProducts } from '../../lib/db';
+import type { Product } from '../../types/product';
+import siteConfig from '../../config/site';
+import { formatINR, getConditionBadgeClass, formatDate } from '../../utils/formatters';
+import { getOrderWhatsAppUrl, getSimilarPiecesWhatsAppUrl } from '../../utils/whatsapp';
+
+export async function getStaticPaths() {
+  const products = getAllProducts();
+  return products.map((product) => ({
+    params: { slug: product.slug },
+    props: { product },
+  }));
+}
+
+interface Props {
+  product: Product;
+}
+
+const { product } = Astro.props;
+const isSold = product.status === 'sold';
+const activePrice = product.offerPrice ?? product.price;
+const hasOffer = typeof product.offerPrice === 'number' && product.offerPrice < product.price;
+
+const orderWhatsAppUrl = getOrderWhatsAppUrl(product);
+const similarPiecesWhatsAppUrl = getSimilarPiecesWhatsAppUrl(product);
+
+// Related products: same category or other available items
+const allProducts = getAllProducts();
+const relatedProducts = allProducts
+  .filter((p) => p.code !== product.code)
+  .sort((a, b) => (a.category === product.category ? -1 : 1))
+  .slice(0, 3);
+
+// JSON-LD Product Schema
+const productSchema = {
+  '@context': 'https://schema.org/',
+  '@type': 'Product',
+  name: product.name,
+  image: product.images.map((img) => new URL(img, siteConfig.siteUrl).href),
+  description: product.description,
+  sku: product.code,
+  brand: {
+    '@type': 'Brand',
+    name: siteConfig.brandName,
+  },
+  offers: {
+    '@type': 'Offer',
+    url: new URL(`/shop/${product.slug}`, siteConfig.siteUrl).href,
+    priceCurrency: 'INR',
+    price: activePrice,
+    itemCondition: 'https://schema.org/UsedCondition',
+    availability: isSold ? 'https://schema.org/OutOfStock' : 'https://schema.org/InStock',
+    seller: {
+      '@type': 'Organization',
+      name: siteConfig.brandName,
+    },
+  },
+};
+---
+
+<BaseLayout
+  title={`${product.name} (${product.code})`}
+  description={product.description}
+  image={product.images[0]}
+  structuredData={productSchema}
+>
+  <Header slot="header" currentPath="/shop" />
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+    <!-- Breadcrumb -->
+    <nav class="flex items-center space-x-2 text-xs font-mono text-brand-charcoal/60 mb-6 uppercase tracking-wider" aria-label="Breadcrumbs">
+      <a href="/" class="hover:text-brand-accent">Home</a>
+      <span>/</span>
+      <a href="/shop" class="hover:text-brand-accent">Shop</a>
+      <span>/</span>
+      <span class="text-brand-charcoal truncate max-w-[200px] sm:max-w-none">{product.category}</span>
+      <span>/</span>
+      <span class="text-brand-dark font-bold truncate max-w-[150px] sm:max-w-none">{product.code}</span>
+    </nav>
+
+    <!-- Main Product Grid Layout -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
+      
+      <!-- Left Column: Gallery (7 Cols) -->
+      <div class="lg:col-span-7">
+        <ProductGallery images={product.images} productName={product.name} />
+      </div>
+
+      <!-- Right Column: Product Info & Actions (5 Cols) -->
+      <div class="lg:col-span-5 flex flex-col justify-between space-y-8">
+        <div>
+          <!-- Code, Status & Condition Row -->
+          <div class="flex items-center justify-between border-b border-brand-border pb-3 mb-4">
+            <div class="flex items-center gap-2">
+              <span class="font-mono text-xs uppercase font-bold px-2 py-0.5 bg-brand-dark text-white">
+                {product.code}
+              </span>
+              <span class="font-mono text-xs uppercase tracking-wider text-brand-charcoal/70">
+                {product.category}
+              </span>
+            </div>
+            
+            <div>
+              {isSold ? (
+                <SoldOutBadge size="sm" />
+              ) : (
+                <span class={`font-mono text-xs uppercase tracking-wider px-2.5 py-0.5 border ${getConditionBadgeClass(product.condition)}`}>
+                  {product.condition}
+                </span>
+              )}
+            </div>
+          </div>
+
+          <!-- Title -->
+          <h1 class="font-display text-3xl sm:text-5xl uppercase tracking-tight text-brand-dark leading-none">
+            {product.name}
+          </h1>
+
+          <!-- Price Block -->
+          <div class="mt-4 p-4 bg-white border border-brand-border flex items-baseline justify-between">
+            <div>
+              <span class="text-[11px] font-mono text-brand-charcoal/60 uppercase block">Thrift Price</span>
+              <div class="flex items-baseline gap-3 mt-0.5">
+                <span class="font-display text-3xl sm:text-4xl text-brand-dark">
+                  {formatINR(activePrice)}
+                </span>
+                {hasOffer && (
+                  <span class="text-base line-through text-brand-sold font-mono">
+                    {formatINR(product.price)}
+                  </span>
+                )}
+              </div>
+            </div>
+            {hasOffer && !isSold && (
+              <span class="bg-brand-accent text-white font-mono text-xs px-2.5 py-1 uppercase tracking-wider font-bold">
+                Special Offer
+              </span>
+            )}
+          </div>
+
+          <!-- Sizing & Condition Badges -->
+          <div class="mt-6 grid grid-cols-2 gap-3 font-mono text-xs">
+            <div class="border border-brand-border bg-white/70 p-3">
+              <span class="text-brand-charcoal/60 uppercase block text-[10px]">Tagged Size</span>
+              <span class="font-display text-xl text-brand-dark uppercase">Size {product.size}</span>
+            </div>
+            <div class="border border-brand-border bg-white/70 p-3">
+              <span class="text-brand-charcoal/60 uppercase block text-[10px]">Condition Grade</span>
+              <span class="font-display text-xl text-brand-dark uppercase">{product.condition}</span>
+            </div>
+          </div>
+
+          <!-- Primary WhatsApp Actions (Prominent Above-the-Fold Placement) -->
+          <div class="mt-6 space-y-3">
+            {isSold ? (
+              <div class="space-y-3">
+                <div class="p-3.5 bg-stone-200 border border-stone-300 text-stone-700 font-mono text-xs flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full bg-stone-500"></span>
+                  <span>This piece was already claimed by another collector.</span>
+                </div>
+                <a
+                  id="whatsapp-similar-btn"
+                  href={similarPiecesWhatsAppUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="w-full py-4 px-6 bg-brand-dark hover:bg-neutral-800 text-brand-surface font-display uppercase tracking-wider text-base flex items-center justify-center gap-2.5 transition-all shadow-md"
+                >
+                  <svg class="w-5 h-5 fill-current text-brand-accent" viewBox="0 0 24 24">
+                    <path d="M12.031 2C6.496 2 2 6.494 2 12.029c0 1.77.464 3.498 1.346 5.025L2 22l5.127-1.319a9.98 9.98 0 0 0 4.904 1.282h.004c5.533 0 10.029-4.494 10.029-10.034.001-2.678-1.04-5.197-2.932-7.091A9.957 9.957 0 0 0 12.031 2zm5.836 14.195c-.242.684-1.222 1.298-1.722 1.378-.456.072-1.042.102-3.327-.847-2.738-1.137-4.512-3.896-4.651-4.08-.135-.183-1.11-1.48-1.11-2.822 0-1.343.7-2.002.951-2.274.24-.263.53-.33.708-.33.177 0 .355.002.51.01.166.008.388-.063.606.463.226.545.772 1.884.839 2.02.068.136.113.296.023.476-.09.18-.136.293-.272.451-.136.158-.286.353-.408.473-.136.136-.279.284-.12.557.159.273.706 1.164 1.516 1.886 1.044.93 1.925 1.218 2.2 1.354.273.136.434.114.594-.068.16-.182.684-.795.865-1.068.182-.272.364-.227.614-.136.25.091 1.588.75 1.861.886.273.136.455.204.522.318.069.113.069.66-.173 1.344z"/>
+                  </svg>
+                  <span>Ask for Similar Pieces in Size {product.size}</span>
+                </a>
+              </div>
+            ) : (
+              <a
+                id="whatsapp-order-btn"
+                href={orderWhatsAppUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="w-full py-4 px-6 bg-brand-accent hover:bg-brand-accent-hover text-white font-display uppercase tracking-wider text-lg flex items-center justify-center gap-3 transition-all shadow-md hover:shadow-lg active:scale-[0.99]"
+              >
+                <!-- WhatsApp SVG icon -->
+                <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12.031 2C6.496 2 2 6.494 2 12.029c0 1.77.464 3.498 1.346 5.025L2 22l5.127-1.319a9.98 9.98 0 0 0 4.904 1.282h.004c5.533 0 10.029-4.494 10.029-10.034.001-2.678-1.04-5.197-2.932-7.091A9.957 9.957 0 0 0 12.031 2zm5.836 14.195c-.242.684-1.222 1.298-1.722 1.378-.456.072-1.042.102-3.327-.847-2.738-1.137-4.512-3.896-4.651-4.08-.135-.183-1.11-1.48-1.11-2.822 0-1.343.7-2.002.951-2.274.24-.263.53-.33.708-.33.177 0 .355.002.51.01.166.008.388-.063.606.463.226.545.772 1.884.839 2.02.068.136.113.296.023.476-.09.18-.136.293-.272.451-.136.158-.286.353-.408.473-.136.136-.279.284-.12.557.159.273.706 1.164 1.516 1.886 1.044.93 1.925 1.218 2.2 1.354.273.136.434.114.594-.068.16-.182.684-.795.865-1.068.182-.272.364-.227.614-.136.25.091 1.588.75 1.861.886.273.136.455.204.522.318.069.113.069.66-.173 1.344z"/>
+                  </svg>
+                  <span>Order on WhatsApp</span>
+                </a>
+              )}
+          </div>
+
+          <!-- Measurements Specification -->
+          {product.measurements && (
+            <div class="mt-6 p-4 border border-brand-border bg-white text-xs font-mono">
+              <span class="font-bold uppercase tracking-wider text-brand-dark block mb-2">
+                Garment Measurements (Laid Flat)
+              </span>
+              <div class="grid grid-cols-2 gap-2 text-brand-charcoal">
+                {product.measurements.chestOrWaist && (
+                  <div>
+                    <span class="text-brand-charcoal/60">Pit-to-Pit / Waist:</span>{' '}
+                    <strong class="text-brand-dark">{product.measurements.chestOrWaist}</strong>
+                  </div>
+                )}
+                {product.measurements.length && (
+                  <div>
+                    <span class="text-brand-charcoal/60">Length / Inseam:</span>{' '}
+                    <strong class="text-brand-dark">{product.measurements.length}</strong>
+                  </div>
+                )}
+                {product.measurements.shoulder && (
+                  <div class="col-span-2">
+                    <span class="text-brand-charcoal/60">Shoulder Width:</span>{' '}
+                    <strong class="text-brand-dark">{product.measurements.shoulder}</strong>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          <!-- Description -->
+          <div class="mt-6 space-y-2">
+            <h2 class="font-mono text-xs uppercase font-bold tracking-wider text-brand-charcoal/80">
+              Piece Overview
+            </h2>
+            <p class="font-sans text-sm text-brand-charcoal leading-relaxed">
+              {product.description}
+            </p>
+          </div>
+
+          <!-- 3-Step WhatsApp Flow Notice -->
+          <div class="mt-8 border-t border-brand-border pt-6">
+            <h3 class="font-mono text-xs uppercase font-bold tracking-wider text-brand-dark mb-3">
+              How Ordering Works:
+            </h3>
+            <ol class="space-y-2 text-xs font-mono text-brand-charcoal/80">
+              <li class="flex items-start gap-2">
+                <span class="w-4 h-4 bg-brand-dark text-white text-[10px] flex items-center justify-center shrink-0">1</span>
+                <span>Click WhatsApp button to send your pre-filled inquiry.</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="w-4 h-4 bg-brand-dark text-white text-[10px] flex items-center justify-center shrink-0">2</span>
+                <span>We confirm availability &amp; send payment QR / UPI ID.</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="w-4 h-4 bg-brand-dark text-white text-[10px] flex items-center justify-center shrink-0">3</span>
+                <span>Your order is dispatched via tracked courier across India.</span>
+              </li>
+            </ol>
+          </div>
+
+          <!-- Quality Guarantee & Policies -->
+          <div class="mt-6 p-4 bg-white/70 border border-brand-border space-y-2 text-xs font-mono">
+            <div class="flex items-center gap-2 text-brand-dark font-bold">
+              <span>✓ Verified Vintage</span>
+              <span>• Steam Sanitized</span>
+              <span>• Pan-India Delivery</span>
+            </div>
+            <p class="text-[11px] text-brand-charcoal/70 leading-normal">
+              Due to the unique 1-of-1 nature of thrift fashion, all sales are final. Please check flat measurements carefully before ordering.
+            </p>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Related Pieces Section -->
+    {relatedProducts.length > 0 && (
+      <div class="mt-16 md:mt-24 pt-12 border-t border-brand-border">
+        <div class="flex items-center justify-between mb-8">
+          <div>
+            <span class="text-xs font-mono uppercase tracking-widest text-brand-accent">From the Archive</span>
+            <h2 class="font-display text-3xl sm:text-4xl uppercase tracking-tight text-brand-dark">
+              Similar Pieces You Might Like
+            </h2>
+          </div>
+          <a href="/shop" class="text-xs font-mono uppercase tracking-wider text-brand-dark hover:text-brand-accent underline underline-offset-4">
+            View All Drops →
+          </a>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
+          {relatedProducts.map((item) => (
+            <ProductCard product={item} />
+          ))}
+        </div>
+      </div>
+    )}
+
+  </div>
+
+  <!-- Sticky Bottom WhatsApp Bar for Mobile (Hidden on Desktop) -->
+  <aside
+    id="mobile-sticky-order-bar"
+    class="fixed bottom-0 left-0 right-0 z-30 bg-brand-surface/95 backdrop-blur-md border-t border-brand-border p-3 md:hidden shadow-2xl"
+    aria-label="Quick Order Bar"
+  >
+    <div class="flex items-center justify-between gap-3">
+      <!-- Mini Preview Info -->
+      <div class="flex items-center gap-2.5 overflow-hidden">
+        <img
+          src={product.images[0]}
+          alt=""
+          class="w-10 h-12 object-cover border border-brand-border shrink-0"
+        />
+        <div class="overflow-hidden">
+          <p class="font-display text-base text-brand-dark uppercase truncate leading-none">
+            {product.name}
+          </p>
+          <div class="flex items-baseline gap-1.5 mt-0.5">
+            <span class="font-display text-lg text-brand-dark">
+              {formatINR(activePrice)}
+            </span>
+            <span class="text-[10px] font-mono text-brand-charcoal/70">
+              Sz {product.size}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Button -->
+      <div class="shrink-0">
+        {isSold ? (
+          <a
+            href={similarPiecesWhatsAppUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="px-3.5 py-2.5 bg-brand-dark text-brand-surface font-display uppercase tracking-wider text-xs inline-flex items-center gap-1.5"
+          >
+            Ask Similar
+          </a>
+        ) : (
+          <a
+            href={orderWhatsAppUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="px-4 py-2.5 bg-brand-accent text-white font-display uppercase tracking-wider text-xs inline-flex items-center gap-1.5 shadow"
+          >
+            <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+              <path d="M12.031 2C6.496 2 2 6.494 2 12.029c0 1.77.464 3.498 1.346 5.025L2 22l5.127-1.319a9.98 9.98 0 0 0 4.904 1.282h.004c5.533 0 10.029-4.494 10.029-10.034.001-2.678-1.04-5.197-2.932-7.091A9.957 9.957 0 0 0 12.031 2zm5.836 14.195c-.242.684-1.222 1.298-1.722 1.378-.456.072-1.042.102-3.327-.847-2.738-1.137-4.512-3.896-4.651-4.08-.135-.183-1.11-1.48-1.11-2.822 0-1.343.7-2.002.951-2.274.24-.263.53-.33.708-.33.177 0 .355.002.51.01.166.008.388-.063.606.463.226.545.772 1.884.839 2.02.068.136.113.296.023.476-.09.18-.136.293-.272.451-.136.158-.286.353-.408.473-.136.136-.279.284-.12.557.159.273.706 1.164 1.516 1.886 1.044.93 1.925 1.218 2.2 1.354.273.136.434.114.594-.068.16-.182.684-.795.865-1.068.182-.272.364-.227.614-.136.25.091 1.588.75 1.861.886.273.136.455.204.522.318.069.113.069.66-.173 1.344z"/>
+            </svg>
+            Order Now
+          </a>
+        )}
+      </div>
+    </div>
+  </aside>
+
+  <Footer slot="footer" />
+  <!-- Hide floating button on mobile PDP to avoid overlapping the sticky order bar -->
+  <FloatingWhatsApp slot="floating" hiddenOnMobile={true} />
+</BaseLayout>

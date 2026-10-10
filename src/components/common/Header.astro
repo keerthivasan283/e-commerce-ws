@@ -1,0 +1,199 @@
+---
+import siteConfig from '../../config/site';
+import { getGeneralWhatsAppUrl } from '../../utils/whatsapp';
+
+export interface Props {
+  currentPath?: string;
+}
+
+const { currentPath = Astro.url.pathname } = Astro.props;
+
+const navItems = [
+  { name: 'Home', href: '/' },
+  { name: 'Shop Catalogue', href: '/shop' },
+  { name: 'About Us', href: '/about' },
+  { name: 'Contact & FAQ', href: '/contact' },
+];
+
+const generalWhatsAppUrl = getGeneralWhatsAppUrl();
+---
+
+<header class="sticky top-0 z-40 w-full bg-brand-surface/95 backdrop-blur-md border-b border-brand-border">
+  <!-- Announcement Ticker -->
+  <div class="bg-brand-dark text-brand-surface text-[11px] sm:text-xs py-1.5 px-4 font-mono text-center tracking-wider overflow-hidden">
+    <div class="inline-flex items-center gap-2">
+      <span class="inline-block w-1.5 h-1.5 rounded-full bg-brand-accent animate-ping"></span>
+      <span>{siteConfig.announcementText}</span>
+    </div>
+  </div>
+
+  <!-- Main Navigation Bar -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16 md:h-20">
+      
+      <!-- Brand Logo -->
+      <a href="/" class="flex items-center gap-2.5 group focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-accent" aria-label="Thrift Tamilan Home">
+        <div class="w-9 h-9 md:w-10 md:h-10 bg-brand-dark text-brand-surface flex items-center justify-center font-display text-xl md:text-2xl group-hover:bg-brand-accent transition-colors">
+          TT
+        </div>
+        <div class="flex flex-col">
+          <span class="font-display text-xl md:text-2xl uppercase tracking-wider text-brand-dark leading-none">
+            {siteConfig.brandName}
+          </span>
+          <span class="text-[9px] font-mono tracking-widest text-brand-accent uppercase mt-0.5">
+            Tamil Nadu Archive
+          </span>
+        </div>
+      </a>
+
+      <!-- Desktop Nav Links -->
+      <nav class="hidden md:flex items-center space-x-8" aria-label="Main Navigation">
+        {navItems.map((item) => {
+          const isActive = currentPath === item.href || (item.href !== '/' && currentPath.startsWith(item.href));
+          return (
+            <a
+              href={item.href}
+              class={`text-sm uppercase tracking-wider font-mono font-medium transition-colors hover:text-brand-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-accent py-1 relative ${
+                isActive ? 'text-brand-accent font-bold' : 'text-brand-dark'
+              }`}
+              aria-current={isActive ? 'page' : undefined}
+            >
+              {item.name}
+              {isActive && (
+                <span class="absolute bottom-0 left-0 right-0 h-0.5 bg-brand-accent"></span>
+              )}
+            </a>
+          );
+        })}
+      </nav>
+
+      <!-- Desktop Header CTAs -->
+      <div class="hidden md:flex items-center gap-4">
+        <a
+          href={generalWhatsAppUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 px-4 py-2 bg-brand-dark hover:bg-brand-accent text-brand-surface text-xs font-mono uppercase tracking-wider transition-colors duration-200"
+          aria-label="Chat with Thrift Tamilan on WhatsApp"
+        >
+          <svg class="w-4 h-4 fill-current text-brand-accent group-hover:text-white" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12.031 2C6.496 2 2 6.494 2 12.029c0 1.77.464 3.498 1.346 5.025L2 22l5.127-1.319a9.98 9.98 0 0 0 4.904 1.282h.004c5.533 0 10.029-4.494 10.029-10.034.001-2.678-1.04-5.197-2.932-7.091A9.957 9.957 0 0 0 12.031 2zm5.836 14.195c-.242.684-1.222 1.298-1.722 1.378-.456.072-1.042.102-3.327-.847-2.738-1.137-4.512-3.896-4.651-4.08-.135-.183-1.11-1.48-1.11-2.822 0-1.343.7-2.002.951-2.274.24-.263.53-.33.708-.33.177 0 .355.002.51.01.166.008.388-.063.606.463.226.545.772 1.884.839 2.02.068.136.113.296.023.476-.09.18-.136.293-.272.451-.136.158-.286.353-.408.473-.136.136-.279.284-.12.557.159.273.706 1.164 1.516 1.886 1.044.93 1.925 1.218 2.2 1.354.273.136.434.114.594-.068.16-.182.684-.795.865-1.068.182-.272.364-.227.614-.136.25.091 1.588.75 1.861.886.273.136.455.204.522.318.069.113.069.66-.173 1.344z"/>
+          </svg>
+          <span>Chat on WhatsApp</span>
+        </a>
+      </div>
+
+      <!-- Mobile Menu Button -->
+      <div class="flex items-center gap-2 md:hidden">
+        <a
+          href={generalWhatsAppUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="p-2 text-brand-dark hover:text-brand-accent transition-colors"
+          aria-label="Direct WhatsApp Chat"
+        >
+          <svg class="w-5 h-5 fill-current text-brand-accent" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12.031 2C6.496 2 2 6.494 2 12.029c0 1.77.464 3.498 1.346 5.025L2 22l5.127-1.319a9.98 9.98 0 0 0 4.904 1.282h.004c5.533 0 10.029-4.494 10.029-10.034.001-2.678-1.04-5.197-2.932-7.091A9.957 9.957 0 0 0 12.031 2zm5.836 14.195c-.242.684-1.222 1.298-1.722 1.378-.456.072-1.042.102-3.327-.847-2.738-1.137-4.512-3.896-4.651-4.08-.135-.183-1.11-1.48-1.11-2.822 0-1.343.7-2.002.951-2.274.24-.263.53-.33.708-.33.177 0 .355.002.51.01.166.008.388-.063.606.463.226.545.772 1.884.839 2.02.068.136.113.296.023.476-.09.18-.136.293-.272.451-.136.158-.286.353-.408.473-.136.136-.279.284-.12.557.159.273.706 1.164 1.516 1.886 1.044.93 1.925 1.218 2.2 1.354.273.136.434.114.594-.068.16-.182.684-.795.865-1.068.182-.272.364-.227.614-.136.25.091 1.588.75 1.861.886.273.136.455.204.522.318.069.113.069.66-.173 1.344z"/>
+          </svg>
+        </a>
+
+        <button
+          id="mobile-menu-toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="mobile-menu"
+          aria-label="Open navigation menu"
+          class="p-2 border border-brand-border bg-brand-surface text-brand-dark hover:border-brand-dark transition-colors focus:outline-none focus:ring-2 focus:ring-brand-accent"
+        >
+          <span class="sr-only">Open navigation menu</span>
+          <!-- Hamburger Icon -->
+          <svg id="hamburger-icon" class="w-6 h-6 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2">
+            <path stroke-linecap="square" stroke-linejoin="miter" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+          <!-- Close Icon -->
+          <svg id="close-icon" class="w-6 h-6 stroke-current hidden" fill="none" viewBox="0 0 24 24" stroke-width="2">
+            <path stroke-linecap="square" stroke-linejoin="miter" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Mobile Drawer Menu -->
+  <div
+    id="mobile-menu"
+    class="hidden md:hidden border-t border-brand-border bg-brand-surface px-4 pt-3 pb-6 shadow-xl"
+  >
+    <nav class="flex flex-col space-y-3" aria-label="Mobile Navigation">
+      {navItems.map((item) => {
+        const isActive = currentPath === item.href || (item.href !== '/' && currentPath.startsWith(item.href));
+        return (
+          <a
+            href={item.href}
+            class={`px-3 py-2 text-base font-mono uppercase tracking-wider flex items-center justify-between border-l-2 transition-colors ${
+              isActive
+                ? 'border-brand-accent bg-brand-accent-light/50 text-brand-accent font-bold'
+                : 'border-transparent text-brand-dark hover:bg-stone-200/50'
+            }`}
+          >
+            <span>{item.name}</span>
+            <span class="text-xs font-mono text-brand-charcoal/50">→</span>
+          </a>
+        );
+      })}
+
+      <!-- Mobile CTA -->
+      <div class="pt-4 border-t border-brand-border flex flex-col gap-3">
+        <a
+          href={generalWhatsAppUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="w-full inline-flex items-center justify-center gap-2 py-3 px-4 bg-brand-accent text-white font-display uppercase tracking-wider text-sm font-semibold"
+        >
+          <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+            <path d="M12.031 2C6.496 2 2 6.494 2 12.029c0 1.77.464 3.498 1.346 5.025L2 22l5.127-1.319a9.98 9.98 0 0 0 4.904 1.282h.004c5.533 0 10.029-4.494 10.029-10.034.001-2.678-1.04-5.197-2.932-7.091A9.957 9.957 0 0 0 12.031 2zm5.836 14.195c-.242.684-1.222 1.298-1.722 1.378-.456.072-1.042.102-3.327-.847-2.738-1.137-4.512-3.896-4.651-4.08-.135-.183-1.11-1.48-1.11-2.822 0-1.343.7-2.002.951-2.274.24-.263.53-.33.708-.33.177 0 .355.002.51.01.166.008.388-.063.606.463.226.545.772 1.884.839 2.02.068.136.113.296.023.476-.09.18-.136.293-.272.451-.136.158-.286.353-.408.473-.136.136-.279.284-.12.557.159.273.706 1.164 1.516 1.886 1.044.93 1.925 1.218 2.2 1.354.273.136.434.114.594-.068.16-.182.684-.795.865-1.068.182-.272.364-.227.614-.136.25.091 1.588.75 1.861.886.273.136.455.204.522.318.069.113.069.66-.173 1.344z"/>
+          </svg>
+          <span>WhatsApp Quick Inquiry</span>
+        </a>
+        <div class="text-[11px] font-mono text-center text-brand-charcoal/70">
+          📍 {siteConfig.location} • 1-of-1 Thrift Apparel
+        </div>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<script>
+  function setupMobileMenu() {
+    const toggleBtn = document.getElementById('mobile-menu-toggle');
+    const menu = document.getElementById('mobile-menu');
+    const hamburgerIcon = document.getElementById('hamburger-icon');
+    const closeIcon = document.getElementById('close-icon');
+
+    if (!toggleBtn || !menu || !hamburgerIcon || !closeIcon) return;
+
+    toggleBtn.addEventListener('click', () => {
+      const isExpanded = toggleBtn.getAttribute('aria-expanded') === 'true';
+      toggleBtn.setAttribute('aria-expanded', String(!isExpanded));
+      menu.classList.toggle('hidden');
+      hamburgerIcon.classList.toggle('hidden');
+      closeIcon.classList.toggle('hidden');
+    });
+
+    // Close menu on ESC key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !menu.classList.contains('hidden')) {
+        menu.classList.add('hidden');
+        toggleBtn.setAttribute('aria-expanded', 'false');
+        hamburgerIcon.classList.remove('hidden');
+        closeIcon.classList.add('hidden');
+        toggleBtn.focus();
+      }
+    });
+  }
+
+  // Support initial load and client navigations
+  setupMobileMenu();
+  document.addEventListener('astro:page-load', setupMobileMenu);
+</script>

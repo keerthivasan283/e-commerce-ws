@@ -1,0 +1,168 @@
+---
+export interface Props {
+  images: string[];
+  productName: string;
+}
+
+const { images, productName } = Astro.props;
+---
+
+<div id="product-gallery" class="w-full space-y-4" data-images={JSON.stringify(images)}>
+  <!-- Main Active Image Container -->
+  <div class="relative aspect-[4/5] bg-stone-950 overflow-hidden border border-brand-border select-none group">
+    <img
+      id="gallery-main-image"
+      src={images[0]}
+      alt={`${productName} - Main View`}
+      class="w-full h-full object-cover transition-opacity duration-300"
+      width="800"
+      height="1000"
+      loading="eager"
+    />
+
+    <!-- Navigation Arrows -->
+    {images.length > 1 && (
+      <>
+        <button
+          id="gallery-prev"
+          type="button"
+          aria-label="Previous image"
+          class="absolute left-2.5 top-1/2 -translate-y-1/2 w-10 h-10 bg-brand-dark/75 hover:bg-brand-dark text-white flex items-center justify-center transition-all opacity-80 hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-brand-accent"
+        >
+          <svg class="w-5 h-5 fill-none stroke-current" viewBox="0 0 24 24" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+
+        <button
+          id="gallery-next"
+          type="button"
+          aria-label="Next image"
+          class="absolute right-2.5 top-1/2 -translate-y-1/2 w-10 h-10 bg-brand-dark/75 hover:bg-brand-dark text-white flex items-center justify-center transition-all opacity-80 hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-brand-accent"
+        >
+          <svg class="w-5 h-5 fill-none stroke-current" viewBox="0 0 24 24" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+
+        <!-- Current Slide Indicator Pill -->
+        <div class="absolute bottom-3 right-3 px-2.5 py-1 bg-brand-dark/80 backdrop-blur-sm text-brand-surface font-mono text-xs">
+          <span id="gallery-current-idx">1</span> / <span>{images.length}</span>
+        </div>
+      </>
+    )}
+  </div>
+
+  <!-- Thumbnails Row -->
+  {images.length > 1 && (
+    <div class="flex gap-3 overflow-x-auto pb-1 scrollbar-thin" aria-label="Image thumbnails">
+      {images.map((img, idx) => (
+        <button
+          type="button"
+          data-index={idx}
+          class={`gallery-thumb flex-shrink-0 w-20 h-24 sm:w-24 sm:h-28 bg-stone-900 border-2 overflow-hidden transition-all focus:outline-none ${
+            idx === 0 ? 'border-brand-accent ring-1 ring-brand-accent' : 'border-brand-border opacity-70 hover:opacity-100'
+          }`}
+          aria-label={`View photo ${idx + 1}`}
+        >
+          <img
+            src={img}
+            alt=""
+            class="w-full h-full object-cover"
+            loading="lazy"
+            width="100"
+            height="120"
+          />
+        </button>
+      ))}
+    </div>
+  )}
+</div>
+
+<script>
+  function initGallery() {
+    const gallery = document.getElementById('product-gallery');
+    if (!gallery) return;
+
+    const imagesData = gallery.dataset.images;
+    if (!imagesData) return;
+
+    const images: string[] = JSON.parse(imagesData);
+    if (!images.length) return;
+
+    let currentIndex = 0;
+    const mainImg = document.getElementById('gallery-main-image') as HTMLImageElement | null;
+    const prevBtn = document.getElementById('gallery-prev');
+    const nextBtn = document.getElementById('gallery-next');
+    const indexPill = document.getElementById('gallery-current-idx');
+    const thumbs = Array.from(document.querySelectorAll('.gallery-thumb'));
+
+    function updateSlide(index: number) {
+      if (!mainImg) return;
+      if (index < 0) index = images.length - 1;
+      if (index >= images.length) index = 0;
+      currentIndex = index;
+
+      mainImg.style.opacity = '0.3';
+      setTimeout(() => {
+        mainImg.src = images[currentIndex];
+        mainImg.style.opacity = '1';
+      }, 100);
+
+      if (indexPill) {
+        indexPill.textContent = String(currentIndex + 1);
+      }
+
+      thumbs.forEach((thumb, i) => {
+        if (i === currentIndex) {
+          thumb.classList.add('border-brand-accent', 'ring-1', 'ring-brand-accent');
+          thumb.classList.remove('border-brand-border', 'opacity-70');
+        } else {
+          thumb.classList.remove('border-brand-accent', 'ring-1', 'ring-brand-accent');
+          thumb.classList.add('border-brand-border', 'opacity-70');
+        }
+      });
+    }
+
+    if (prevBtn) {
+      prevBtn.addEventListener('click', () => updateSlide(currentIndex - 1));
+    }
+    if (nextBtn) {
+      nextBtn.addEventListener('click', () => updateSlide(currentIndex + 1));
+    }
+
+    thumbs.forEach((thumb) => {
+      thumb.addEventListener('click', () => {
+        const idx = Number(thumb.getAttribute('data-index') || 0);
+        updateSlide(idx);
+      });
+    });
+
+    // Touch Swipe Support on Mobile
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    gallery.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    gallery.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe();
+    }, { passive: true });
+
+    function handleSwipe() {
+      const threshold = 40;
+      if (touchEndX < touchStartX - threshold) {
+        // Swiped left -> next
+        updateSlide(currentIndex + 1);
+      } else if (touchEndX > touchStartX + threshold) {
+        // Swiped right -> prev
+        updateSlide(currentIndex - 1);
+      }
+    }
+  }
+
+  initGallery();
+  document.addEventListener('astro:page-load', initGallery);
+</script>
